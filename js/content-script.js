@@ -1,26 +1,27 @@
-var helloWorld = document.createElement('div');
-var style = document.createElement('style');
+const helloWorld = document.createElement('div');
+const style = document.createElement('style');
 
-var oLi="";
+let oLi="";
 
-var sCss="";
+let sCss="";
 
-for (var i=0;i<360;i++) { //一个表盘总共是60个刻度
+for (var i=0;i<360;i++) {
 
   sCss+=".helloworld li:nth-of-type("+(i+1)+"){-webkit-transform: rotate("+i*1+"deg);}";
 
-  oLi+="<li></li>";
+  if ((i + 1) % 10 === 0) {
+    oLi+="<li><em>"+(i+1)+"</em></li>";
+  } else {
+    oLi+="<li></li>";
+  }
+
 
 };
 
-helloWorld.innerHTML=oLi;
+helloWorld.innerHTML= "<ul>" + oLi + '</ul>';
 
-style.innerHTML+=sCss;//表盘刻度渲染完成
-// helloWorld.innerHTML = 'hello world!';
+style.innerHTML+=sCss;
 helloWorld.className = 'helloworld'
-
-helloWorld.style.textAlign = 'center';
-helloWorld.style.fontSize = '48px';
 
 
 document.head.appendChild(style);
