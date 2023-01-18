@@ -6,6 +6,7 @@ btn.addEventListener('click', function () {
     radius: value.textContent
   }
   sendMsg(message)
+  window.close()
 })
 
 const value = document.querySelector("#value")

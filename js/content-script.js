@@ -1,7 +1,5 @@
-let created = false
 let radius = 150
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  // console.log(request)
   if (request.radius) {
     radius = Number(request.radius)
     if (!request.startMeasure) {
@@ -9,15 +7,34 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
   }
   if (request.startMeasure) {
-    create()
     changeRadius()
   }
 })
 
-function  create() {
-  if (created) {
-    return
+const calcStateRotation = (rotation) => {
+  rotation = rotation % 360
+
+  if (rotation < 0) {
+    rotation += 360
   }
+
+  return Number(rotation).toFixed(2)
+}
+
+const calOppositeAngle = (curDeg) => {
+  let a = Number(curDeg) + 180
+  if (a > 360) {
+    a = a - 360
+  }
+  return Number(a).toFixed(2)
+}
+
+const clear = () => {
+  document.onmousemove = null
+  document.onmouseup = null
+}
+
+function  create() {
   const measureAngle = document.createElement('div');
   const style = document.createElement('style');
 
@@ -29,7 +46,7 @@ function  create() {
     sCss += ".measure-angle li:nth-of-type(" + (i) + "){-webkit-transform: rotate(" + i * 1 + "deg);}";
 
     if ((i + 1) % 10 === 0) {
-      oLi += "<li><em>" + (i + 1) + "</em></li>";
+      oLi += "<li><em>" + (i + 1 === 360 ? 0 : i + 1) + "</em></li>";
     } else {
       oLi += "<li></li>";
     }
@@ -40,32 +57,29 @@ function  create() {
   style.innerHTML+=sCss;
   measureAngle.className = 'measure-angle'
 
-
   document.head.appendChild(style);
   document.body.appendChild(measureAngle);
-  created = true
+
+}
+
+function changeRadius () {
+  const exist = document.getElementById('changeRadius')
+  if (exist) {
+    exist.remove()
+  }
+  const style = document.createElement('style');
+  style.id = 'changeRadius'
+  const sCss = `.measure-angle {display: block; width: ${radius * 2 - 80}px; height: ${radius * 2 - 80}px;}.measure-angle li { transform-origin: center ${radius}px; left: ${radius - 1}px } .line_0,.line_90,.line_180,.line_270 {
+  transform-origin: center ${radius}px; left: ${radius - 1}px}`
+  style.innerHTML+=sCss;
+  document.head.appendChild(style);
+}
+
+function bindOplineEvent () {
 
   let _dragEle = document.querySelector('.measure-angle')
   let _line90 = document.querySelector('.line_90')
   let _line270 = document.querySelector('.line_270')
-
-  const calcStateRotation = (rotation) => {
-    rotation = rotation % 360
-
-    if (rotation < 0) {
-      rotation += 360
-    }
-
-    return Number(rotation).toFixed(2)
-  }
-
-  const calOppositeAngle = (curDeg) => {
-    let a = Number(curDeg) + 180
-    if (a > 360) {
-      a = a - 360
-    }
-    return Number(a).toFixed(2)
-  }
 
   if (_line90) {
     _line90.addEventListener('mousedown', function (e) {
@@ -78,9 +92,6 @@ function  create() {
 
       const bound = _dragEle.getBoundingClientRect()
       const center = {x: bound.left + bound.width / 2, y: bound.top + bound.height / 2 }
-      console.log('center', center)
-
-
       document.onmousemove = (e) => {
         if (!_act) {
           return
@@ -109,7 +120,7 @@ function  create() {
       }
 
 
-    }, { passive: false })
+    })
   }
 
   if (_line270) {
@@ -121,7 +132,6 @@ function  create() {
       e.stopPropagation()
       // 按下位置
 
-      // console.log(downX, downY)
       const bound = _dragEle.getBoundingClientRect()
       const center = {x: bound.left + bound.width / 2, y: bound.top + bound.height / 2 }
       console.log('center', center)
@@ -152,20 +162,21 @@ function  create() {
         _act = false
         clear()
       }
-
-
-    }, { passive: false })
+    })
   }
 
+}
+
+function bindMeasureAngleEvent () {
+  let _dragEle = document.querySelector('.measure-angle')
+  let _act = false
 
   const dragEnter = (e) => {
-    let _act = false
     if (e.type !== 'mousedown') {
       return
     }
-    _act = true
     const bcr = _dragEle.getBoundingClientRect()
-
+    _act = true
     // 按下位置
     const downX = e.clientX
     const downY = e.clientY
@@ -191,31 +202,17 @@ function  create() {
       _act = false
       clear()
     }
+
   }
+
 
   if (_dragEle) {
-    _dragEle.addEventListener('mousedown', dragEnter, { passive: false })
+  _dragEle.addEventListener('mousedown', dragEnter)
   }
 
-
-  const clear = () => {
-    document.onmousemove = null
-    document.onmouseup = null
-  }
 }
 
-function changeRadius () {
-  const exits = document.getElementById('changeRadius')
-  if (exits) {
-    exits.remove()
-  }
-  if (created) {
-    const style = document.createElement('style');
-    style.id = 'changeRadius'
-    const sCss = `.measure-angle {width: ${radius * 2 - 80}px; height: ${radius * 2 - 80}px;}.measure-angle li { transform-origin: center ${radius}px; left: ${radius - 1}px } .line_0,.line_90,.line_180,.line_270 {
-    transform-origin: center ${radius}px; left: ${radius - 1}px}`
-    style.innerHTML+=sCss;
-    document.head.appendChild(style);
-  }
-}
+create()
+bindOplineEvent()
+bindMeasureAngleEvent()
 
