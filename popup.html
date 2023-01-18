@@ -5,15 +5,18 @@
   <meta name="viewport"
         content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Document</title>
-  <script src="popup.js"></script>
+  <title>测量角度</title>
 </head>
 <body>
-<div style="width: 100px; height: 100px">
-  <button>开始测量</button>
+<div style="width: 150px; height: 100px;">
+  <div>
+    <p>圆半径:<output id="value"></output></p>
+    <p><input id="pi_input" type="range" min="150" max="1000" step="1" value="150" /></p>
+  </div>
+  <button class="btn_measure">开始测量</button>
 </div>
 
-
+<script src="popup.js"></script>
 </body>
 </html>
 
