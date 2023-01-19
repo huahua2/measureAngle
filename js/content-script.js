@@ -190,8 +190,8 @@ function bindMeasureAngleEvent() {
         const top = e.clientY - downY + bcr.y
         const bound = _dragEle.getBoundingClientRect()
         const {width, height} = bound
-        _dragEle.style.left = Math.min(Math.max(left, -(width / 2)), window.innerWidth - width + 10) + 'px'
-        _dragEle.style.top = Math.min(Math.max(top, 0), window.innerHeight - height / 5) + 'px'
+        _dragEle.style.left = Math.min(Math.max(left, -(width / 2)), window.innerWidth - width / 2) + 'px'
+        _dragEle.style.top = Math.min(Math.max(top, -(height / 2)), window.innerHeight - height / 2) + 'px'
         _dragEle.style.transform = 'none'
       }
     }

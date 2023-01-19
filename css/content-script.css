@@ -3,6 +3,11 @@
   padding: 0;
 }
 
+:root {
+  --line-color1: #3895f1;
+  --line-color2: #F70707;
+}
+
 .measure-angle {
   box-sizing: content-box;
   z-index: 99999;
@@ -77,7 +82,7 @@
 .line_0 {
   position: absolute;
   height: 60px;
-  border-left: 1px solid #3895f1;
+  border-left: 1px solid var(--line-color1);
   width: 0px;
   left: 149px;
   top: 0px;
@@ -89,7 +94,7 @@
 .line_180 {
   position: absolute;
   height: 60px;
-  border-left: 1px solid #3895f1;
+  border-left: 1px solid var(--line-color1);
   width: 0px;
   left: 149px;
   top: 0px;
@@ -102,7 +107,7 @@
 .line_90 {
   position: absolute;
   height: 40px;
-  border-left: 1px solid #F70707;
+  border-left: 1px solid var(--line-color2);
   width: 0px;
   left: 149px;
   top: 0px;
@@ -123,7 +128,7 @@
 .line_270 {
   position: absolute;
   height: 40px;
-  border-left: 1px solid #F70707;
+  border-left: 1px solid var(--line-color2);
   width: 0px;
   left: 149px;
   top: 0px;
@@ -131,7 +136,7 @@
   transform: rotate(180deg);
   display: flex;
   justify-content: center;
-  color: #F70707;
+  color: var(--line-color2);
   padding-top: 20px;
 }
 
@@ -139,3 +144,24 @@
   cursor: move;
   height: 60px;
 }
+
+.line_270::after, .line_90::after {
+  content: '';
+  border-left: 3px solid var(--line-color2);
+  width: 0px;
+  height: 35px;
+  position: absolute;
+  top: 25px;
+  left: -2px;
+}
+
+.line_0::after, .line_180::after {
+  content: '';
+  border-left: 3px solid var(--line-color1);
+  width: 0px;
+  height: 35px;
+  position: absolute;
+  top: 25px;
+  left: -2px;
+}
+
