@@ -1,9 +1,13 @@
 
 const btn = document.querySelector('.btn_measure')
 btn.addEventListener('click', function () {
+  const input = document.querySelector("#inputAngle")
   let message = {
     startMeasure: true,
-    radius: value.textContent
+    radius: value.textContent,
+  }
+  if (input.value.trim() !== '') {
+    message.angle = Number(input.value)
   }
   sendMsg(message)
   window.close()
@@ -11,6 +15,7 @@ btn.addEventListener('click', function () {
 
 const value = document.querySelector("#value")
 const input = document.querySelector("#pi_input")
+
 value.textContent = input.value
 
 chrome.storage.local.get(['object', 'string'], function(obj){

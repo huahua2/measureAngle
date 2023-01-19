@@ -13,6 +13,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.startMeasure) {
     changeRadius()
   }
+  if (request.angle) {
+    let _line90 = document.querySelector('.line_90')
+    let _line270 = document.querySelector('.line_270')
+    setLinePositionByAngle({ curEle: _line90, oppositeEle: _line270, deg: request.angle })
+  }
 })
 
 function radian2Angle(radian) {
@@ -91,8 +96,6 @@ function bindOplineEvent() {
       }
       let _act = true
       e.stopPropagation()
-      // 按下位置
-
       const bound = _dragEle.getBoundingClientRect()
       const center = {x: bound.left + bound.width / 2, y: bound.top + bound.height / 2}
       document.onmousemove = (e) => {
@@ -103,21 +106,11 @@ function bindOplineEvent() {
         const downY = e.clientY
         const radian = Math.atan2(downY - center.y, downX - center.x)
         const deg = radian2Angle(radian)
-        const curDeg = calcStateRotation(deg)
-        const cssAngle = calCssAngle(curDeg)
-        _line90.style.transform = `rotate(${cssAngle}deg)`;
-        _line90.style.height = `60px`;
-        _line90.innerHTML = curDeg
-
-
-        const oppositeAngle = calOppositeAngle(cssAngle)
-        _line270.style.transform = `rotate(${oppositeAngle}deg)`;
-        _line270.style.height = `60px`;
-        _line270.innerHTML = calcStateRotation(curDeg - 180)
+        setLinePositionByAngle({ curEle: _line90, oppositeEle: _line270, deg })
       }
       document.onmouseup = (e) => {
-        _line270.style.removeProperty('height')
         _line90.style.removeProperty('height')
+        _line270.style.removeProperty('height')
         _act = false
         clear()
       }
@@ -132,8 +125,6 @@ function bindOplineEvent() {
       }
       let _act = true
       e.stopPropagation()
-      // 按下位置
-
       const bound = _dragEle.getBoundingClientRect()
       const center = {x: bound.left + bound.width / 2, y: bound.top + bound.height / 2}
       document.onmousemove = (e) => {
@@ -144,16 +135,7 @@ function bindOplineEvent() {
         const downY = e.clientY
         const radian = Math.atan2(downY - center.y, downX - center.x)
         const deg = radian2Angle(radian)
-        const curDeg = calcStateRotation(deg)
-        const cssAngle = calCssAngle(curDeg)
-        _line270.style.transform = `rotate(${cssAngle}deg)`;
-        _line270.innerHTML = curDeg
-        _line270.style.height = `60px`;
-
-        const oppositeAngle = calOppositeAngle(cssAngle)
-        _line90.style.transform = `rotate(${oppositeAngle}deg)`;
-        _line90.innerHTML = calcStateRotation(curDeg - 180)
-        _line90.style.height = `60px`;
+        setLinePositionByAngle({ curEle: _line270, oppositeEle: _line90, deg })
       }
       document.onmouseup = (e) => {
         _line270.style.removeProperty('height')
@@ -163,6 +145,19 @@ function bindOplineEvent() {
       }
     })
   }
+}
+
+function setLinePositionByAngle ({ curEle, oppositeEle, deg}) {
+  const curDeg = calcStateRotation(deg)
+  const cssAngle = calCssAngle(curDeg)
+  curEle.style.transform = `rotate(${cssAngle}deg)`;
+  curEle.innerHTML = curDeg
+  curEle.style.height = `60px`;
+
+  const oppositeAngle = calOppositeAngle(cssAngle)
+  oppositeEle.style.transform = `rotate(${oppositeAngle}deg)`;
+  oppositeEle.innerHTML = calcStateRotation(curDeg - 180)
+  oppositeEle.style.height = `60px`;
 }
 
 function bindMeasureAngleEvent() {
