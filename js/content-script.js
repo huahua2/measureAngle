@@ -1,7 +1,7 @@
 // 默认半径
 let radius = 150
 // 90°在下面，false在上面
-const deg90InBottom = true
+const deg90InBottom = false
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.radius) {
