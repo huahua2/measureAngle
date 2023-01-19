@@ -1,4 +1,8 @@
+// 默认半径
 let radius = 150
+// 90°在下面，false在上面
+const deg90InBottom = true
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.radius) {
     radius = Number(request.radius)
@@ -11,9 +15,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 })
 
-
 function radian2Angle(radian) {
-  return radian * -180 / Math.PI
+  return radian * (deg90InBottom ? 180 : -180) / Math.PI
 }
 
 const calcStateRotation = (rotation) => {
@@ -35,9 +38,10 @@ const calOppositeAngle = (curDeg) => {
 }
 
 const calCssAngle = (angle, decimal = 2) => {
-  const calDeg = 90 - angle
+  const calDeg = deg90InBottom ? angle - 270 : 90 - angle
   return Number(calcStateRotation(calDeg)).toFixed(decimal)
 }
+
 const clear = () => {
   document.onmousemove = null
   document.onmouseup = null
@@ -55,14 +59,15 @@ function create() {
     sCss += ".measure-angle li:nth-of-type(" + (i) + "){-webkit-transform: rotate(" + i * 1 + "deg);}";
 
     if ((i + 1) % 10 === 0) {
-      oLi += "<li><em>" + calCssAngle(i + 1, 0) + "</em></li>";
+      const angleText = deg90InBottom ? i + 1 + 180 : i + 1
+      oLi += "<li><em>" + calCssAngle(angleText, 0) + "</em></li>";
     } else {
       oLi += "<li></li>";
     }
   }
   ;
 
-  measureAngle.innerHTML = '<div class="inner_circle"></div><div class="line_wrap"><div class="container">' + "<ul>" + oLi + '</ul><div class="line_0"></div><div class="line_180"></div><div class="line_90">90</div><div class="line_270">270</div></div></div>';
+  measureAngle.innerHTML = '<div class="inner_circle"></div><div class="line_wrap"><div class="container">' + "<ul>" + oLi + '</ul><div class="line_0"></div><div class="line_180"></div><div class="line_90"></div><div class="line_270"></div></div></div>';
 
   style.innerHTML += sCss;
   measureAngle.className = 'measure-angle'
@@ -79,6 +84,7 @@ function bindOplineEvent() {
   let _line270 = document.querySelector('.line_270')
 
   if (_line90) {
+    _line90.innerHTML = deg90InBottom ? '270' : '90'
     _line90.addEventListener('mousedown', function (e) {
       if (!_dragEle) {
         return
@@ -115,12 +121,11 @@ function bindOplineEvent() {
         _act = false
         clear()
       }
-
-
     })
   }
 
   if (_line270) {
+    _line270.innerHTML = deg90InBottom ? '90' : '270'
     _line270.addEventListener('mousedown', function (e) {
       if (!_dragEle) {
         return
