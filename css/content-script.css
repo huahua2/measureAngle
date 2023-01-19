@@ -4,15 +4,16 @@
 }
 
 :root {
-  --line-color1: #3895f1;
-  --line-color2: #F70707;
+  --line-color1: rgba(255, 255, 255, 1);
+  --line-color2: #1ae721;
+  --font-color: #313030;
 }
 
 .measure-angle {
   box-sizing: content-box;
   z-index: 99999;
   position: fixed;
-  border: 46px solid rgba(255, 255, 255, 0.5);
+  border: 46px solid rgba(222, 220, 220, 0.7);
   /*box-shadow: 46px 46px rgba(255, 255, 255, 0.5);*/
   border-radius: 50%;
   width: 208px;
@@ -53,7 +54,7 @@
   list-style: none;
   width: 0px;
   height: 3px;
-  border-left: 1px solid #000;
+  border-left: 1px solid var(--font-color);
   position: absolute;
   left: 149px;
   top: 0;
@@ -76,7 +77,7 @@
   font-style: inherit;
   display: inline-block;
   transform: scale(.7);
-  color: #333;
+  color: var(--font-color);
 }
 
 .line_0 {
@@ -115,7 +116,7 @@
   transform: rotate(0deg);
   display: flex;
   justify-content: center;
-  color: #F70707;
+  color: var(--line-color2);
   padding-top: 20px;
 }
 
@@ -164,4 +165,3 @@
   top: 25px;
   left: -2px;
 }
-

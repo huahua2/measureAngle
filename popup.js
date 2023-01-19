@@ -5,6 +5,7 @@ btn.addEventListener('click', function () {
   let message = {
     startMeasure: true,
     radius: value.textContent,
+    opacity: opacityValue.textContent
   }
   if (input.value.trim() !== '') {
     message.angle = Number(input.value)
@@ -15,12 +16,24 @@ btn.addEventListener('click', function () {
 
 const value = document.querySelector("#value")
 const input = document.querySelector("#pi_input")
-
 value.textContent = input.value
 
+
+const opacityValue = document.querySelector("#opacityValue")
+const opacityInput = document.querySelector("#opacity")
+opacityValue.textContent = opacityInput.value
+
+
 chrome.storage.local.get(['object', 'string'], function(obj){
-  value.textContent = obj.object.measureRadius
-  input.value = obj.object.measureRadius
+  if (obj.object.measureRadius !== undefined) {
+    value.textContent = obj.object.measureRadius
+    input.value = obj.object.measureRadius
+  }
+
+  if (obj.object.opacity !== undefined) {
+    opacityInput.value = obj.object.opacity
+    opacityValue.textContent = obj.object.opacity
+  }
 });
 
 input.addEventListener("input", (event) => {
@@ -32,6 +45,19 @@ input.addEventListener("input", (event) => {
     object: {measureRadius: value.textContent },
   }, function(){
     console.log('measureRadius保存成功');
+  })
+
+})
+
+opacityInput.addEventListener("input", (event) => {
+  opacityValue.textContent = event.target.value
+  sendMsg({
+    opacity: opacityValue.textContent
+  })
+  chrome.storage.local.set({
+    object: {opacity: opacityValue.textContent },
+  }, function(){
+    console.log('opacity保存成功');
   })
 
 })

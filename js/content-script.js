@@ -18,6 +18,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     let _line270 = document.querySelector('.line_270')
     setLinePositionByAngle({ curEle: _line90, oppositeEle: _line270, deg: request.angle })
   }
+  if (request.opacity !== undefined) {
+    let _dragEle = document.querySelector('.measure-angle')
+    _dragEle.style.border = `46px solid rgba(255, 255, 255, ${request.opacity})`
+  }
 })
 
 function radian2Angle(radian) {
@@ -218,10 +222,43 @@ function changeRadius() {
   const sCss = `.measure-angle {display: block; width: ${WIDTH - BORDER_WIDTH}px; height: ${WIDTH - BORDER_WIDTH}px;}.measure-angle li { transform-origin: center ${radius}px; left: ${radius - 1}px; } .line_0,.line_90,.line_180,.line_270 { transform-origin: center ${radius}px; left: ${radius - 1}px; }`
   style.innerHTML += sCss;
   document.head.appendChild(style);
+  resetPos()
 }
 
+function resetPos () {
+  let _dragEle = document.querySelector('.measure-angle')
+  _dragEle.style.left = '50%'
+  _dragEle.style.top = '50%'
+  _dragEle.style.transform = 'translate(-50%, -50%)'
+}
 
 create()
 bindOplineEvent()
 bindMeasureAngleEvent()
 
+window.addEventListener("resize", () => {
+  resetPos()
+});
+// const dpr = window.devicePixelRatio
+// window.addEventListener("resize", () => {
+//   if (window.devicePixelRatio === dpr) {
+//     return
+//   }
+//   const aa = dpr - window.devicePixelRatio
+//   if (aa > 0){
+//     console.log('scaleValue', window.devicePixelRatio)
+//     let scale = 0
+//     if (aa < 0.5) {
+//       scale = 1 + aa
+//     } else {
+//       if (aa > 0.6) {
+//         scale = 2.5
+//       } else {
+//         scale = 2
+//       }
+//     }
+//     console.log('scale', scale)
+//     let _dragEle = document.querySelector('.measure-angle')
+//     _dragEle.style.transform = `scale(${scale})`
+//   }
+// });

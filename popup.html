@@ -8,10 +8,14 @@
   <title>测量角度</title>
 </head>
 <body>
-<div style="width: 150px; height: 150px;">
+<div style="width: 150px; height: 200px;">
   <div>
     <p>圆半径:<output id="value"></output>px</p>
     <p><input id="pi_input" type="range" min="150" max="1000" step="1" value="150" /></p>
+  </div>
+  <div>
+    <p>透明度:<output id="opacityValue"></output></p>
+    <p><input id="opacity" type="range" min="0" max="1" step="0.1" value="0.7" /></p>
   </div>
   <div>
     <p>输入度数:<input id="inputAngle" type="number" style="width: 120px" /></p>
